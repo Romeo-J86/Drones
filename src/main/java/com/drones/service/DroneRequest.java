@@ -1,4 +1,4 @@
-package com.drones.service.drone;
+package com.drones.service;
 
 import com.drones.util.DroneModel;
 import com.drones.util.State;

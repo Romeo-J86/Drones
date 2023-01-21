@@ -1,7 +1,7 @@
 package com.drones.api;
 
-import com.drones.service.drone.DroneRequest;
-import com.drones.service.drone.DroneService;
+import com.drones.service.DroneRequest;
+import com.drones.service.DroneService;
 import com.drones.service.dto.DroneDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

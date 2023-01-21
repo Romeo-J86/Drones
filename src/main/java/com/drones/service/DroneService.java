@@ -1,8 +1,7 @@
-package com.drones.service.drone;
+package com.drones.service;
 
 import com.drones.service.dto.DroneDto;
 import com.drones.service.dto.MedicationDto;
-import com.drones.util.State;
 
 import java.util.List;
 

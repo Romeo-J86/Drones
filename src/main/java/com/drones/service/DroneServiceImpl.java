@@ -1,4 +1,4 @@
-package com.drones.service.drone;
+package com.drones.service;
 
 import com.drones.domain.Drone;
 import com.drones.domain.Medication;
