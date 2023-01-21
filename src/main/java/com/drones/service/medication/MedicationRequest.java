@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 @Data
 public class MedicationRequest {
     private String name;
-    private Double weight;
+    private Integer weight;
     private String code;
     private String image;
 

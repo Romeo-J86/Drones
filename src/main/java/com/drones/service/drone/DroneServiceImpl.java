@@ -8,12 +8,10 @@ import com.drones.persistence.DroneRepository;
 import com.drones.persistence.MedicationRepository;
 import com.drones.service.dto.DroneDto;
 import com.drones.service.dto.MedicationDto;
-import com.drones.util.AppConstants;
 import com.drones.util.EntityToDtoUtil;
-import com.drones.util.State;
-import com.drones.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +34,7 @@ import static java.util.Objects.requireNonNull;
 @Slf4j
 @RequiredArgsConstructor
 public class DroneServiceImpl implements DroneService {
+    private final ModelMapper modelMapper;
     private final DroneRepository droneRepository;
     private final MedicationRepository medicationRepository;
     @Override
@@ -45,13 +44,15 @@ public class DroneServiceImpl implements DroneService {
         validateWeightLimit(droneRequest.getWeightLimit());
 
         log.info("Registering drone with, droneRequest = {}", droneRequest);
-        return convertToDroneDto(droneRepository.save(Drone.builder()
+        Drone drone = Drone.builder()
                 .serialNumber(droneRequest.getSerialNumber())
                 .model(droneRequest.getModel())
                 .state(droneRequest.getState())
                 .weightLimit(droneRequest.getWeightLimit())
                 .batteryCapacity(droneRequest.getBatteryCapacity())
-                .build()));
+                .build();
+        Drone savedDrone = droneRepository.save(drone);
+        return convertToDroneDto(savedDrone, modelMapper);
     }
     @Override
     public DroneDto findDroneById(Long droneId) {
@@ -59,7 +60,7 @@ public class DroneServiceImpl implements DroneService {
                 droneRepository.findById(droneId)
                         .orElseThrow(() -> new DroneNotFoundException(
                                 String.format(DRONE_NOT_FOUND, droneId)
-                        )));
+                        )), modelMapper);
     }
     @Override
     public DroneDto loadDroneWithMedication(String medicationCode) {
@@ -75,14 +76,15 @@ public class DroneServiceImpl implements DroneService {
             throw new DroneLoadingFailedException(LOADING_DRONE_FAILED);
         }
         foundDrone.get().setState(LOADING);
-        return convertToDroneDto(droneRepository.save(foundDrone.get()));
+        foundDrone.get().setMedication(medication.get());
+        return convertToDroneDto(droneRepository.save(foundDrone.get()), modelMapper);
     }
 
     @Override
     public List<DroneDto> checkAvailableDronesForLoading() {
         return droneRepository.findAllByState(IDLE)
                 .stream().filter(drone -> drone.getBatteryCapacity() > 25)
-                .map(drone -> convertToDroneDto(drone))
+                .map(drone -> convertToDroneDto(drone, modelMapper))
                 .collect(Collectors.toList());
     }
 
@@ -101,6 +103,6 @@ public class DroneServiceImpl implements DroneService {
 
         if (!drone.isPresent()) throw new DroneNotFoundException(DRONE_NOT_FOUND);
 
-        return EntityToDtoUtil.convertToMedicationDto(drone.get().getMedication());
+        return EntityToDtoUtil.convertToMedicationDto(drone.get().getMedication(), modelMapper);
     }
 }

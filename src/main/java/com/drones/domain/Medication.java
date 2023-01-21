@@ -24,7 +24,7 @@ public class Medication {
     private Long id;
     @Column(unique = true)
     private String name;
-    private Double weight;
+    private Integer weight;
     private String code;
     private String image;
 }

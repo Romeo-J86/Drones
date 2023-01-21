@@ -24,7 +24,7 @@ public class GlobalRestControllerExceptionHandler {
     public ResponseEntity<String> medicationNotFoundException(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), NOT_FOUND);
     }
-    @ExceptionHandler(InvalidInputParameter.class)
+    @ExceptionHandler(InvalidInputParameterException.class)
     @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<String> invalidInputParameter(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), BAD_REQUEST);

@@ -10,7 +10,7 @@ import lombok.Data;
 public class MedicationDto {
     private Long id;
     private String name;
-    private Double weight;
+    private Integer weight;
     private String code;
     private String image;
 }

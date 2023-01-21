@@ -1,7 +1,7 @@
 package com.drones.util;
 
 import com.drones.errors.AboveMaxWeightLimitException;
-import com.drones.errors.InvalidInputParameter;
+import com.drones.errors.InvalidInputParameterException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
@@ -20,7 +20,7 @@ public class ValidationUtil {
         String pattern = ("[A-Z0-9_]*$");
         final boolean isValid = !StringUtils.isEmpty(code) && code.matches(pattern);
         if (!isValid){
-            throw new InvalidInputParameter(
+            throw new InvalidInputParameterException(
                     format(IN_VALID_CODE, code)
             );
         }
@@ -30,7 +30,7 @@ public class ValidationUtil {
         String pattern = ("[-a-zA-Z0-9_]*$");
         final boolean isValid = !StringUtils.isEmpty(name) && name.matches(pattern);
         if (!isValid){
-            throw new InvalidInputParameter(
+            throw new InvalidInputParameterException(
                     format(IN_VALID_NAME, name)
             );
         }
