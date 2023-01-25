@@ -8,12 +8,12 @@ import lombok.Data;
  * @author Romeo Jerenyama
  * @created 17/01/2023 - 21:53
  */
-public record DroneDto (
-        Long droneId,
-        String serialNumber,
-        DroneModel model,
-        Integer weightLimit,
-        Integer batteryCapacity,
-        State state
-){
+@Data
+public class DroneDto {
+    private Long droneId;
+    private String serialNumber;
+    private DroneModel model;
+    private Integer weightLimit;
+    private Integer batteryCapacity;
+    private State state;
 }

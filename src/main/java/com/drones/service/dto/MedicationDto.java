@@ -6,11 +6,11 @@ import lombok.Data;
  * @author Romeo Jerenyama
  * @created 18/01/2023 - 14:34
  */
-public record MedicationDto (
-        Long id,
-        String name,
-        Integer weight,
-        String code,
-        String image
-){
+@Data
+public class MedicationDto {
+    private Long id;
+    private String name;
+    private Integer weight;
+    private String code;
+    private String image;
 }
