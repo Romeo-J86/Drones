@@ -22,7 +22,7 @@ public class DroneScheduler {
     private final DroneRepository droneRepository;
     private final AuditEventLogRepository auditEventLogRepository;
 
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelay = 300000)
     public void checkDroneBattery(){
         log.info("Inside cron job........");
         droneRepository.findAll().stream().forEach(drone -> {
