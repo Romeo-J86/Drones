@@ -8,6 +8,7 @@ import com.drones.util.AppConstants;
 import com.drones.util.EntityToDtoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,11 +31,13 @@ import static com.drones.util.AppConstants.AUDIT_EVENT_LOG_NOT_FOUND;
 @RequiredArgsConstructor
 public class AuditEventLogServiceImpl implements AuditEventLogService{
     private final AuditEventLogRepository auditEventLogRepository;
+    private final ModelMapper modelMapper;
     @Override
     public Page<AuditEventLogDto> filterByDate(LocalDate date, Pageable pageable) {
         List<AuditEventLogDto> auditEventLogs = auditEventLogRepository
                 .findAllByCreatedDate(date, pageable)
-                .stream().map(auditEventLog -> EntityToDtoUtil.convertToAuditEventLogDto(auditEventLog))
+                .stream().map(auditEventLog -> EntityToDtoUtil
+                        .convertToAuditEventLogDto(auditEventLog, modelMapper))
                 .collect(Collectors.toList());
         if (auditEventLogs.isEmpty() && Objects.equals(auditEventLogs, null)){
             throw new AuditEventLogNotFoundException(AUDIT_EVENT_LOG_NOT_FOUND);

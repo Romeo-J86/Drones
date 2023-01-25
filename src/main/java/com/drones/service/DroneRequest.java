@@ -2,7 +2,6 @@ package com.drones.service;
 
 import com.drones.util.DroneModel;
 import com.drones.util.State;
-import lombok.Builder;
 import lombok.Data;
 
 /**

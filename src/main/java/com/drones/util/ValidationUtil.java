@@ -5,8 +5,10 @@ import com.drones.errors.InvalidInputParameterException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
-import static com.drones.util.AppConstants.IN_VALID_CODE;
-import static com.drones.util.AppConstants.IN_VALID_NAME;
+import java.security.SecureRandom;
+import java.util.stream.Collectors;
+
+import static com.drones.util.AppConstants.*;
 import static java.lang.String.format;
 
 /**
@@ -39,8 +41,17 @@ public class ValidationUtil {
         log.info("Validating weightLimit = {}", weightLimit);
         if (weightLimit > 500){
             throw new AboveMaxWeightLimitException(
-                    format(AppConstants.ABOVE_MAX_WEIGHT_LIMIT, weightLimit)
+                    format(ABOVE_MAX_WEIGHT_LIMIT, weightLimit)
             );
         }
+    }
+    public static String generateSerialNumber(){
+        return new SecureRandom()
+                .ints(0, 100)
+                .mapToObj(value -> Integer.toString(value, 100))
+                .distinct().limit(100)
+                .collect(Collectors.joining())
+                .replaceAll("([a-zA-Z0-9]{4})", "$1-")
+                .substring(0, 100);
     }
 }

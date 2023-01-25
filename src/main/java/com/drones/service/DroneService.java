@@ -19,7 +19,7 @@ public interface DroneService {
     DroneDto registerDrone(DroneRequest droneRequest);
 
     /**
-     * This method retrieves Drone from droneId
+     * This method retrieves Drone with droneId
      * @param droneId
      * @return DroneDto
      */

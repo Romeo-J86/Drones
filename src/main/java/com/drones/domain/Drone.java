@@ -11,6 +11,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Romeo Jerenyama
@@ -32,8 +34,6 @@ public class Drone {
     private String serialNumber;
     @Enumerated(EnumType.STRING)
     private DroneModel model;
-    @Max(value = 500, message = "Weight limit is 500")
-
     private Integer weightLimit;
     @Max(100)
     @Min(0)

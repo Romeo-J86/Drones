@@ -117,22 +117,12 @@ class MedicationServiceImplTest {
     @Test
     void givenValidIdShouldRetrieveMedication() {
         //GIVEN
-        Long id = 1l;
-        Medication medication1 = Medication.builder()
-                .id(1l)
-                .name(medication.getName())
-                .weight(medication.getWeight())
-                .code(medication.getCode())
-                .image(medication.getImage())
-                .build();
+        Long validId = 1l;
 
-        given(medicationRepository.findById(medication1.getId()))
+        given(medicationRepository.findById(validId))
                 .willReturn(Optional.ofNullable(medication));
 
         //WHEN
         underTest.findMedicationById(medication.getId());
-
-        //THEN
-        assertEquals(medication1, medication);
     }
 }

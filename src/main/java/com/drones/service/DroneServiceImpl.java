@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import static com.drones.util.AppConstants.DRONE_NOT_FOUND;
 import static com.drones.util.AppConstants.LOADING_DRONE_FAILED;
 import static com.drones.util.EntityToDtoUtil.convertToDroneDto;
+import static com.drones.util.EntityToDtoUtil.convertToMedicationDto;
 import static com.drones.util.State.IDLE;
 import static com.drones.util.State.LOADING;
 import static com.drones.util.ValidationUtil.validateWeightLimit;
@@ -64,7 +65,7 @@ public class DroneServiceImpl implements DroneService {
     }
     @Override
     public DroneDto loadDroneWithMedication(String medicationCode) {
-        requireNonNull(medicationCode, "medicationCode cannot be null");
+        requireNonNull(medicationCode, "medication code cannot be null");
 
         Optional<Medication> medication = medicationRepository.findByCode(medicationCode);
         Optional<Drone> foundDrone = droneRepository.findAllByState(IDLE)
@@ -103,6 +104,6 @@ public class DroneServiceImpl implements DroneService {
 
         if (!drone.isPresent()) throw new DroneNotFoundException(DRONE_NOT_FOUND);
 
-        return EntityToDtoUtil.convertToMedicationDto(drone.get().getMedication(), modelMapper);
+        return convertToMedicationDto(drone.get().getMedication(), modelMapper);
     }
 }

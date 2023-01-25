@@ -2,11 +2,14 @@ package com.drones.service.drone;
 
 import com.drones.domain.Drone;
 import com.drones.domain.Medication;
+import com.drones.errors.AboveMaxWeightLimitException;
+import com.drones.errors.InvalidInputParameterException;
 import com.drones.persistence.DroneRepository;
 import com.drones.persistence.MedicationRepository;
 import com.drones.service.DroneRequest;
 import com.drones.service.DroneService;
 import com.drones.service.DroneServiceImpl;
+import com.drones.util.AppConstants;
 import com.drones.util.DroneModel;
 import com.drones.util.State;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +21,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.util.Optional;
+
+import static com.drones.util.AppConstants.ABOVE_MAX_WEIGHT_LIMIT;
+import static com.drones.util.AppConstants.IN_VALID_CODE;
+import static com.drones.util.DroneModel.Cruiserweight;
+import static com.drones.util.State.IDLE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -27,7 +38,7 @@ import static org.mockito.Mockito.verify;
  */
 @ExtendWith(MockitoExtension.class)
 class DroneServiceImplTest {
-
+/*//*/
     @Mock
     private DroneRepository droneRepository;
     @Mock
@@ -41,12 +52,16 @@ class DroneServiceImplTest {
     @BeforeEach
     void setUp() {
         underTest = new DroneServiceImpl(modelMapper,droneRepository, medicationRepository);
+
         medication = Medication.builder()
-                .id(1l)
-                .code("A5")
-                .name("Paracetamol")
-                .image("Image")
-                .weight(52)
+                .id(1l).code("A5")
+                .name("Paracetamol").image("Image")
+                .weight(52).build();
+
+        drone = Drone.builder().droneId(1l)
+                .state(IDLE).model(Cruiserweight)
+                .serialNumber("4OHK").batteryCapacity(52)
+                .weightLimit(64).medication(medication)
                 .build();
 
     }
@@ -57,7 +72,7 @@ class DroneServiceImplTest {
         DroneRequest droneRequest = new DroneRequest();
         droneRequest.setSerialNumber("123456");
         droneRequest.setState(State.LOADING);
-        droneRequest.setModel(DroneModel.Cruiserweight);
+        droneRequest.setModel(Cruiserweight);
         droneRequest.setWeightLimit(12);
         droneRequest.setBatteryCapacity(45);
 
@@ -83,6 +98,33 @@ class DroneServiceImplTest {
 
     }
     @Test
-    void findDroneById() {
+    @DisplayName("Throws AboveMaxWeightLimitException if passed weight above weight limit")
+    void givenWeightAboveMaxLimitShouldThrowException(){
+        //GIVEN
+        int aboveWeightLimit = 501;
+        DroneRequest droneRequest = new DroneRequest();
+        droneRequest.setSerialNumber("123456");
+        droneRequest.setState(State.LOADING);
+        droneRequest.setModel(Cruiserweight);
+        droneRequest.setWeightLimit(aboveWeightLimit);
+        droneRequest.setBatteryCapacity(45);
+
+        //WHEN
+        //THEN
+        assertThatThrownBy(() -> underTest.registerDrone(droneRequest))
+                .isInstanceOf(AboveMaxWeightLimitException.class)
+                .hasMessageContaining(ABOVE_MAX_WEIGHT_LIMIT, droneRequest.getWeightLimit());
+
+    }
+    @Test
+    void givenValidDroneIdShouldCheckBatteryCapacity(){
+        //GIVEN
+        Long validId = 1L;
+        given(droneRepository.findById(validId))
+                .willReturn(Optional.ofNullable(drone));
+
+        //WHEN
+        underTest.findDroneById(validId);
+
     }
 }
