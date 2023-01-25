@@ -38,7 +38,7 @@ import static org.mockito.Mockito.verify;
  */
 @ExtendWith(MockitoExtension.class)
 class DroneServiceImplTest {
-/*//*/
+
     @Mock
     private DroneRepository droneRepository;
     @Mock
