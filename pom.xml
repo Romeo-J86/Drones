@@ -11,6 +11,7 @@
     <groupId>com.drones</groupId>
     <artifactId>drones</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>drones</name>
     <description>drones</description>
     <properties>
@@ -68,6 +69,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>drones</finalName>
     </build>
 
 </project>
