@@ -22,6 +22,10 @@ jobs:
       - name: Unit Tests
         run: mvn -B test --file pom.xml
 
+      - name: OWASP Dependency Check
+        run: |
+          mvn org.owasp:dependency-check-maven:check
+
       - name: Build The Application
         run: |
           mvn clean
@@ -47,4 +51,4 @@ jobs:
           context: .
           dockerfile: Dockerfile
           push: true
-          tags: ${{secrets.DOCKER_HUB_USERNAME}}/drones:v1
+          tags: ${{secrets.DOCKER_HUB_USERNAME}}/drones:v1g
